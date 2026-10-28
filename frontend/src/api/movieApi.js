@@ -2,7 +2,8 @@
  * Centralized API Client for CineTrack Backend
  */
 
-const BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api').replace(/\/+$/, '');
+const rawBaseUrl = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api').trim();
+const BASE_URL = rawBaseUrl.replace(/\/+$/, '');
 
 class ApiError extends Error {
   constructor(message, status, errors = null) {
@@ -14,6 +15,14 @@ class ApiError extends Error {
 }
 
 const request = async (endpoint, options = {}) => {
+  // Check if placeholder was accidentally left in environment variables
+  if (BASE_URL.includes('<') || BASE_URL.includes('>') || BASE_URL.includes('YOUR-RENDER-BACKEND-URL')) {
+    throw new ApiError(
+      'Configuration Error: VITE_API_BASE_URL still contains placeholder "<YOUR-RENDER-BACKEND-URL>". In Render, go to your Frontend Static Site -> Environment -> update VITE_API_BASE_URL with your actual backend URL (without < >).',
+      0
+    );
+  }
+
   const url = `${BASE_URL}${endpoint}`;
   const headers = {
     'Content-Type': 'application/json',
