@@ -56,6 +56,21 @@ if (process.env.NODE_ENV !== 'test') {
   app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 }
 
+// Root welcome endpoint for direct browser visits
+app.get('/', (req, res) => {
+  return successResponse(res, 200, 'Welcome to CineTrack Movie Watchlist REST API', {
+    service: 'CineTrack Backend',
+    status: 'online',
+    database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+    endpoints: {
+      health: '/api/health',
+      movies: '/api/movies',
+      watchNext: '/api/movies/watch-next',
+      stats: '/api/stats'
+    }
+  });
+});
+
 // Health check endpoint for Render monitoring
 app.get('/api/health', (req, res) => {
   return successResponse(res, 200, 'Movie Watchlist API is healthy', {
