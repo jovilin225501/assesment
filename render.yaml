@@ -1,0 +1,42 @@
+# Render Blueprint specification for CineTrack MERN Movie Watchlist Manager
+# Deploys backend Express API web service and frontend Vite static site
+
+services:
+  # -------------------------------------------------------------
+  # Backend Web Service
+  # -------------------------------------------------------------
+  - type: web
+    name: movie-watchlist-backend
+    env: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: MONGODB_URI
+        sync: false # Set securely in Render dashboard
+      - key: FRONTEND_URL
+        sync: false # Set to the deployed frontend static site URL
+
+  # -------------------------------------------------------------
+  # Frontend Static Site
+  # -------------------------------------------------------------
+  - type: web
+    name: movie-watchlist-frontend
+    env: static
+    rootDir: frontend
+    plan: free
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        sync: false # Set to https://movie-watchlist-backend.onrender.com/api
