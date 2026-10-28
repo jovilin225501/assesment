@@ -1,0 +1,15 @@
+{
+  "name": "movie-watchlist-root",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Root orchestrator for CineTrack Movie Watchlist Manager",
+  "scripts": {
+    "postinstall": "npm install --prefix backend && npm install --prefix frontend",
+    "start": "npm start --prefix backend",
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "build": "npm run build --prefix frontend",
+    "seed": "npm run seed --prefix backend",
+    "test": "npm test --prefix backend"
+  }
+}
