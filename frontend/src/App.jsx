@@ -123,6 +123,22 @@ export const App = () => {
     fetchStatistics();
   }, [fetchStatistics]);
 
+  // Support direct hash navigation (e.g., #stats, #watchlist, #overview, #watch-next)
+  useEffect(() => {
+    const applyHash = () => {
+      const hash = window.location.hash.replace('#', '').toLowerCase();
+      if (['overview', 'watchlist', 'stats'].includes(hash)) {
+        setActiveTab(hash);
+      } else if (hash === 'watch-next') {
+        setActiveTab('overview');
+        handleTriggerWatchNext();
+      }
+    };
+    applyHash();
+    window.addEventListener('hashchange', applyHash);
+    return () => window.removeEventListener('hashchange', applyHash);
+  }, []);
+
   useEffect(() => {
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
