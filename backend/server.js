@@ -75,12 +75,15 @@ app.use(notFoundHandler);
 // Centralized error handler
 app.use(errorHandler);
 
+const startKeepAlive = require('./utils/keepAlive');
+
 // Start server after connecting to MongoDB Atlas
 if (require.main === module) {
   connectDatabase()
     .then(() => {
       app.listen(PORT, () => {
         console.log(`[Server] Movie Watchlist API is running on port ${PORT} [${process.env.NODE_ENV || 'development'}]`);
+        startKeepAlive();
       });
     })
     .catch((err) => {
