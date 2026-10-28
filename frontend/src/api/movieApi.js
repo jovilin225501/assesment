@@ -2,8 +2,14 @@
  * Centralized API Client for CineTrack Backend
  */
 
-const rawBaseUrl = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api').trim();
-const BASE_URL = rawBaseUrl.replace(/\/+$/, '');
+let normalizedBase = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api').trim().replace(/\/+$/, '');
+
+// If the user provided the domain without /api, append /api automatically
+if (!normalizedBase.endsWith('/api') && !normalizedBase.includes('<') && !normalizedBase.includes('>')) {
+  normalizedBase = `${normalizedBase}/api`;
+}
+
+const BASE_URL = normalizedBase;
 
 class ApiError extends Error {
   constructor(message, status, errors = null) {

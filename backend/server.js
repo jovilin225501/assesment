@@ -80,9 +80,12 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// API Routes
+// API Routes (Mounted on both /api/* and root /* for full client URL tolerance)
 app.use('/api/movies', movieRoutes);
+app.use('/movies', movieRoutes);
+
 app.use('/api/stats', statsRoutes);
+app.use('/stats', statsRoutes);
 
 // Catch-all 404 handler
 app.use(notFoundHandler);
